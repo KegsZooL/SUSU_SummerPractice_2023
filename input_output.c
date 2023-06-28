@@ -7,9 +7,6 @@
 
 char* data_input(void)
 {	
-	system("chcp 1251");
-	system("cls");
-
 	FILE* fp = fopen("INPUT.txt", "r");
 
 	if (fp != NULL)
