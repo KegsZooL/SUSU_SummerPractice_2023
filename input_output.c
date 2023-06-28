@@ -1,5 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
-#define MAX_WORD_LEN 100 // Максимальная длина строки
+#define MAX_WORD_LEN 100 // РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР° СЃС‚СЂРѕРєРё
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,31 +12,26 @@ char* data_input(void)
 
 	FILE* fp = fopen("INPUT.txt", "r");
 
-	if (fp == NULL)
-	{
-		printf("Ошибка чтения файла!\n");
-		return 0;
-	}
-	else
+	if (fp != NULL)
 	{
 		int countWords = 0;
 		char word[MAX_WORD_LEN];
-	
-		//Определение количества строк в файле
+
+		//РћРїСЂРµРґРµР»РµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР° СЃС‚СЂРѕРє РІ С„Р°Р№Р»Рµ
 		while (fgets(word, MAX_WORD_LEN, fp) != NULL)
 			countWords++;
 
-		//Выделение памяти для массива указателей
+		//Р’С‹РґРµР»РµРЅРёРµ РїР°РјСЏС‚Рё РґР»СЏ РјР°СЃСЃРёРІР° СѓРєР°Р·Р°С‚РµР»РµР№
 		char** bufferWords = (char**)malloc(countWords * sizeof(char*));
 
-		//Иницилизация каждого указателя на NULL для предотвращения хранения случайных значений
+		//РРЅРёС†РёР»РёР·Р°С†РёСЏ РєР°Р¶РґРѕРіРѕ СѓРєР°Р·Р°С‚РµР»СЏ РЅР° NULL РґР»СЏ РїСЂРµРґРѕС‚РІСЂР°С‰РµРЅРёСЏ С…СЂР°РЅРµРЅРёСЏ СЃР»СѓС‡Р°Р№РЅС‹С… Р·РЅР°С‡РµРЅРёР№
 		for (int i = 0; i < countWords; i++)
 			bufferWords[i] = NULL;
-		
-		//Перемещение каретки файла в начало
+
+		//РџРµСЂРµРјРµС‰РµРЅРёРµ РєР°СЂРµС‚РєРё С„Р°Р№Р»Р° РІ РЅР°С‡Р°Р»Рѕ
 		fseek(fp, 0, SEEK_SET);
 
-		for(int i = 0; i < countWords; i++)
+		for (int i = 0; i < countWords; i++)
 		{
 			fgets(word, MAX_WORD_LEN, fp);
 			word[strlen(word) - 1] = '\0';
@@ -47,18 +42,17 @@ char* data_input(void)
 		fclose(fp);
 		return bufferWords;
 	}
+	else
+		return NULL;
 }
 
 void data_output(int result)
 {	
 	FILE* fp = fopen("OUTPUT.txt", "a+");
-	if (fp == NULL)
-		return 0;
 
 	if (result)
 		fputs("ACCEPT\n", fp);
 	else
 		fputs("REJECT\n", fp);
-
 	fclose(fp);
 }
