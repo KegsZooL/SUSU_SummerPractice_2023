@@ -1,31 +1,32 @@
 #define _CRT_SECURE_NO_WARNINGS
 #define MAX_LEN_WORD 25
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-const char* alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-const char* numbers = "0123456789";
-
-// Классификация символа
+// РљР»Р°СЃСЃРёС„РёРєР°С†РёСЏ СЃРёРјРІРѕР»Р°
 const char* classifySymbol(char symbol)
 {
     switch (symbol)
     {
-    case '$': return "доллар";
-    case ';': return "тчкзпт";
-    case '=': return "равно";
-    case '\'': return "одинкавыч";
-    case '-': return "тире";
-    case ' ': return "пробел";
+    case '$': return "РґРѕР»Р»Р°СЂ";
+    case ';': return "С‚С‡РєР·РїС‚";
+    case '=': return "СЂР°РІРЅРѕ";
+    case '\'': return "РѕРґРёРЅРєР°РІС‹С‡";
+    case '-': return "С‚РёСЂРµ";
+    case ' ': return "РїСЂРѕР±РµР»";
 
-    default: return "ошибка";
+    default: return "РѕС€РёР±РєР°";
     }
 }
 
-// Транслитерация символьной цепочки в цепочку лексем (подается строка)
+// РўСЂР°РЅСЃР»РёС‚РµСЂР°С†РёСЏ СЃРёРјРІРѕР»СЊРЅРѕР№ С†РµРїРѕС‡РєРё РІ С†РµРїРѕС‡РєСѓ Р»РµРєСЃРµРј (РїРѕРґР°РµС‚СЃСЏ СЃС‚СЂРѕРєР°)
 char** trl(char* str)
-{
+{   
+    const char* alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    const char* numbers = "0123456789";
+
     int length = strlen(str);
     char** arrSymbols = malloc(length * sizeof(char*));
 
@@ -37,9 +38,9 @@ char** trl(char* str)
         char symbol = str[i];
 
         if (strchr(alphabet, symbol))
-            symbolClass = "буква";
+            symbolClass = "Р±СѓРєРІР°";
         else if (strchr(numbers, symbol))
-            symbolClass = "цифра";
+            symbolClass = "С†РёС„СЂР°";
         else
         {
             int check = 0;
@@ -53,13 +54,12 @@ char** trl(char* str)
                 }
             }
             if (check == 0)
-                symbolClass = "ошибка";
+                symbolClass = "РѕС€РёР±РєР°";
         }
 
         arrSymbols[i] = malloc(2 * sizeof(char));
         arrSymbols[i][0] = symbol;
         strcpy(arrSymbols[i] + 1, symbolClass);
     }
-
     return arrSymbols;
 }
