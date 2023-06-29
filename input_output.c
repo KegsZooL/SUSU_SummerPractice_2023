@@ -5,44 +5,26 @@
 #include <stdio.h>
 #include <string.h>
 
+//Функция считывает символы из потока и возвращает буфер, содержащий исходную строку из файла.
 char* data_input(void)
 {	
 	FILE* fp = fopen("INPUT.txt", "r");
 
 	if (fp != NULL)
 	{
-		int countWords = 0;
-		char word[MAX_WORD_LEN];
+		char* word = malloc(MAX_WORD_LEN * sizeof(char));
 
-		//Определение количества строк в файле
-		while (fgets(word, MAX_WORD_LEN, fp) != NULL)
-			countWords++;
+		fgets(word, MAX_WORD_LEN, fp);
+		word[strlen(word) - 1] = '\0';
 
-		//Выделение памяти для массива указателей
-		char** bufferWords = (char**)malloc(countWords * sizeof(char*));
-
-		//Иницилизация каждого указателя на NULL для предотвращения хранения случайных значений
-		for (int i = 0; i < countWords; i++)
-			bufferWords[i] = NULL;
-
-		//Перемещение каретки файла в начало
-		fseek(fp, 0, SEEK_SET);
-
-		for (int i = 0; i < countWords; i++)
-		{
-			fgets(word, MAX_WORD_LEN, fp);
-			word[strlen(word) - 1] = '\0';
-
-			bufferWords[i] = malloc(MAX_WORD_LEN * sizeof(char));
-			strcpy(bufferWords[i], word);
-		}
 		fclose(fp);
-		return bufferWords;
+		return word;
 	}
 	else
 		return NULL;
 }
 
+//Функциия принимает result, в зависимости от которой в файл output.txt выводится ACCEPT или REJECT.
 void data_output(int result)
 {	
 	FILE* fp = fopen("OUTPUT.txt", "a+");
