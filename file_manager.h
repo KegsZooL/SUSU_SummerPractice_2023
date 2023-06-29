@@ -5,4 +5,3 @@ char* data_input(void);
 void data_output(int result);
 
 #endif 
-
