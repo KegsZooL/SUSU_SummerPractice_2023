@@ -16,7 +16,6 @@ const char* classifySymbol(char symbol)
     case '\'': return "одинкавыч";
     case '-': return "тире";
     case ' ': return "пробел";
-
     default: return "ошибка";
     }
 }
@@ -42,7 +41,7 @@ char** trl(char* str)
         else if (strchr(numbers, symbol))
             symbolClass = "цифра";
         else
-        {
+        {   // Переменная для проверки неподходящего символа
             int check = 0;
             for (int j = 0; j < sizeof(sym) / sizeof(sym[0]); j++)
             {
@@ -56,7 +55,6 @@ char** trl(char* str)
             if (check == 0)
                 symbolClass = "ошибка";
         }
-
         arrSymbols[i] = malloc(2 * sizeof(char));
         arrSymbols[i][0] = symbol;
         strcpy(arrSymbols[i] + 1, symbolClass);
