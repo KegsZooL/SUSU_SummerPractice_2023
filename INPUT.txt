@@ -1,0 +1,6 @@
+const Eps = 0.2E6;
+const OneHndNeg = 100;
+const Error = $F3AEF3;
+con3st S3tr = '0123456789abcdefgh';
+const- Eps = 1E-3;
+const OneHndNeg = 100;
