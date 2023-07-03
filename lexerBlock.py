@@ -1,16 +1,19 @@
+# Главная функция, которая выполняет лексический анализ списка строк arrStr.
+# Dызывает функцию main() для анализа каждой лексемы в списке и возвращает список результатов resultWords.
 def Lexer(arrStr):
     global word, numbers, num16, resultWords, specSymbols, id, arr
 
     word, numbers, num16, resultWords, specSymbols, id, arr = "", list("123456789"), list("ABCDEF"), [], \
         ("тчкзпт", "равно", "одинкавыч", "буква", "цифра", "точка"), -1, arrStr
 
-    arr.append(("@", "end"))
+    arr.append(("@", "end")) # Добавление в конец двумерного массива ("@", "end") для корректного завершения рекурсии.
     main()
 
     return resultWords
 
+# Основная функция, которая анализирует тип текущей лексемы и вызывает соответствующую функцию проверки для обработки лексемы.
 def main():
-    global word, resultWords, id
+    global word, resultWords, id # Заново объявляем некоторые переменные для их изменения.
     id += 1
     tmp = arr[id][1]
     if tmp == "буква":
@@ -38,6 +41,7 @@ def main():
         resultWords.append((arr[id][0], arr[id][1]))
         checkNum16()
 
+# Функция для проверки буквенного символа.
 def checkChar():
     global word, resultWords, id
     id += 1
@@ -50,7 +54,7 @@ def checkChar():
         word += arr[id][0]
         checkChar()
     elif tmp == "пробел":
-        resultWords.append((word, "идентификатор"))
+        resultWords.append((word, "ИДЕНТИФИКАТОР"))
         word = ""
         main()
     elif tmp == "тире":
@@ -58,13 +62,19 @@ def checkChar():
             word += arr[id][0]
             checkNum()
         else:
-            resultWords.append((word, "идентификатор"))
+            resultWords.append((word, "ИДЕНТИФИКАТОР"))
             word = ""
             id -= 1
             main()
+    elif tmp == "тчкзпт":
+        resultWords.append((word, "ИДЕНТИФИКАТОР"))
+        word = ""
+        id -= 1
+        main()
     elif tmp == "end":
-        resultWords.append((word, "идентификатор"))
+        resultWords.append((word, "ИДЕНТИФИКАТОР"))
 
+# Функция для проверки цифры.
 def checkNum():
     global word, resultWords, id
     id += 1
@@ -76,20 +86,21 @@ def checkNum():
     elif arr[id][0] == "." and arr[id + 1][1] == "цифра":
         word += arr[id][0]
         checkDecimal()
-    elif arr[id][0] == "E":
+    elif arr[id][0] == "E": #Если встречается символ "E", то функция вызывает checkExponent() для проверки числа в экспоненциальной записи.
         word += arr[id][0]
         checkExponent()
     elif tmp in specSymbols:
-        resultWords.append((word, "целое"))
+        resultWords.append((word, "ЦЕЛОЕ"))
         resultWords.append((arr[id][0], arr[id][1]))
         main()
     elif tmp == "тире":
-        resultWords.append((word, "целое"))
+        resultWords.append((word, "ЦЕЛОЕ"))
         resultWords.append((arr[id][0], arr[id][1]))
         main()
     elif tmp == "end":
-        resultWords.append((word, "целое"))
+        resultWords.append((word, "ЦЕЛОЕ"))
 
+# Функция для проверки 16-ричных констант
 def checkNum16():
     global word, resultWords, id
     id += 1
@@ -104,20 +115,22 @@ def checkNum16():
         checkNum16()
     elif tmp_1 in specSymbols or tmp_1 == "пробел":
         if word != "":
-            resultWords.append((word, "16-ричная константа"))
+            resultWords.append((word, "ЦЕЛОЕ"))
             word = ""
         resultWords.append((arr[id][0], arr[id][1]))
         main()
     elif tmp_1 == "тире":
         if word != "":
-            resultWords.append((word, "16-ричная константа"))
+            resultWords.append((word, "ЦЕЛОЕ"))
             word = ""
         resultWords.append((arr[id][0], arr[id][1]))
         main()
     elif tmp_1 == "end":
         if word != "":
-            resultWords.append((word, "16-ричная константа"))
+            resultWords.append((word, "ЦЕЛОЕ"))
 
+# Функция для проверки строки, которая находится внутри одинарных кавычек.
+# Функция продолжает анализ до тех пор, пока не встретит закрывающую одинарную кавычку.
 def checkStr():
     global word, resultWords, id
     id += 1
@@ -128,12 +141,14 @@ def checkStr():
         checkStr()
     elif tmp == "одинкавыч":
         word += arr[id][0]
-        resultWords.append((word, "строка"))
+        resultWords.append((word, "СТРОКОВАЯ КОНСТАНТА"))
         word = ""
         main()
     elif tmp == "end":
-        resultWords.append((word, "строка"))
+        resultWords.append((word, "СТРОКОВАЯ КОНСТАНТА"))
 
+# Это функция нужна, если в строке находиться вещественное число.
+# Если тип является цифрой, функция продолжает анализ до тех пор, пока не встретит цифру или специальный символ. Если встречается символ "E", функция вызывает функцию checkExponent()
 def checkDecimal():
     global word, resultWords, id
     id += 1
@@ -145,12 +160,13 @@ def checkDecimal():
         word += arr[id][0]
         checkExponent()
     elif tmp in specSymbols:
-        resultWords.append((word, "вещественная константа"))
+        resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
         resultWords.append((arr[id][0], arr[id][1]))
         main()
     elif tmp == "end":
-        resultWords.append((word, "вещественная константа"))
+        resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
 
+# Эта функция нужна, если в строке находится экспоненциальная запись числа.
 def checkExponent():
     global word, resultWords, id
     id += 1
@@ -163,8 +179,8 @@ def checkExponent():
         word += arr[id][0]
         checkExponent()
     elif tmp in specSymbols:
-        resultWords.append((word, "вещественная константа"))
+        resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
         resultWords.append((arr[id][0], arr[id][1]))
         main()
     elif tmp == "end":
-        resultWords.append((word, "вещественная константа"))
+        resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
