@@ -1,14 +1,8 @@
-from file_manager import data_input, data_output
+# Импортирование основных модулей
+from file_manager import*
 from transliteration import tansliteration as trl
-from lexerBlock import Lexer
-
+from lexerBlock import*
 
 string = data_input()
 lexems = trl(string)
-l = Lexer(lexems)
-
-print(lexems)
-
-
-
-print(l, '\n')
+words = Lexer(lexems)
