@@ -1,4 +1,4 @@
-def classify_symbol(symbol): #Классификация спец.символа
+def classify_symbol(symbol): #Классификация спецсимволов
     if symbol == '$':
         return "доллар"
     elif symbol == ';':
@@ -16,9 +16,9 @@ def classify_symbol(symbol): #Классификация спец.символа
 def tansliteration(string):
      alphabet = list("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") #Список алфавита
      numbers = list("0123456789") #Список цифр
-     sym = ['$', ';', '=', '\'', ' ', '-', '.'] #Список спец.символов
+     sym = ['$', ';', '=', '\'', ' ', '-', '.'] #Список спецсимволов
 
-     arrSymbols = [] #Создаем список, куда будем помещать символы с их классами
+     arrSymbols = [] #Список для хранения символов с их классами
      i = 0
      while i < len(string):
          if string[i] in alphabet:
@@ -37,5 +37,3 @@ def tansliteration(string):
          i += 1
 
      return arrSymbols
-
-
