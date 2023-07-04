@@ -1,9 +1,10 @@
 def Syntax(string):
 
     status = "0"
-    classes = ["hexadecimal", "number", "decimalNum", "expNum"]
+    classes = ["hexadecimal", "number", "decimalNum", "str", "bool", "minus"]
 
     for i in range(len(string)):
+        print(status)
         if "КЛСЛОВО_" in string[i]:
             if status == "0":
                 status = "keyword"
@@ -31,16 +32,31 @@ def Syntax(string):
                 status = "number"
             else:
                 return 0
-        # elif string[i] == "ВЕЩЕСТВЕННАЯ КОНСТАНТА":
-        #     if status == "equal":
-        #
-        #     else:
-        #         return 0
+        elif string[i] == "ВЕЩЕСТВЕННАЯ КОНСТАНТА":
+            if status == "equal":
+                status = "decimalNum"
+            else:
+                return 0
+        elif string[i] == "СТРОКОВАЯ КОНСТАНТА":
+            if status == "equal":
+                status = "str"
+            else:
+                return 0
+        elif string[i] == "ЛОГКОНСТ_TRUE":
+            if status == "equal":
+                status = "bool"
+            else:
+                return 0
+        elif string[i] == "минус":
+            if status == "equal" and string[i + 1] == "ВЕЩЕСТВЕННАЯ КОНСТАНТА":
+                status = "minus"
+            else:
+                return 0
         elif string[i] == "тчкзпт":
             if status in classes:
                 status = "end"
             else:
                 return 0
-        elif status == "end":
-            return 0
-    return 0
+
+    if status == "end":
+        return 1
