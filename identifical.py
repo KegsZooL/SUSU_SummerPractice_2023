@@ -18,12 +18,11 @@ def identification(words):
 
     for i in words:
         if i[0].lower() in pascaleWords:
-            
+
             arr.append("ОШИБКА")
             print("\nНЕДОПУСТИМОЕ НАЗВАНИЕ ПЕРЕМЕННОЙ")
             data_output(0)
             exit(0)
-            
         elif i[0].lower() == keyWord:
             arr.append("КЛСЛОВО_" + i[0].upper())
         elif i[0].lower() in boolConst:
