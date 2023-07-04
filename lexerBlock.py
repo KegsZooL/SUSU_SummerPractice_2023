@@ -4,16 +4,16 @@ def Lexer(arrStr):
     global word, numbers, num16, resultWords, specSymbols, id, arr
 
     word, numbers, num16, resultWords, specSymbols, id, arr = "", list("123456789"), list("ABCDEF"), [], \
-        ("тчкзпт", "равно", "одинкавыч", "буква", "цифра", "точка"), -1, arrStr
+        ("тчкзпт", "равно", "одинкавыч", "буква", "цифра", "точка", "плюс"), -1, arrStr
 
-    arr.append(("@", "end")) # Добавление в конец двумерного массива ("@", "end") для корректного завершения рекурсии.
+    arr.append(("@", "end"))  # Добавление в конец двумерного массива ("@", "end") для корректного завершения рекурсии.
     main()
 
     return resultWords
 
 # Основная функция, которая анализирует тип текущей лексемы и вызывает соответствующую функцию проверки для обработки лексемы.
 def main():
-    global word, resultWords, id # Заново объявляем некоторые переменные для их изменения.
+    global word, resultWords, id  # Заново объявляем некоторые переменные для их изменения.
     id += 1
     tmp = arr[id][1]
     if tmp == "буква":
@@ -30,12 +30,22 @@ def main():
     elif tmp in specSymbols:
         resultWords.append((arr[id][0], arr[id][1]))
         main()
-    elif tmp == "тире":
+    elif tmp == "минус":
         if arr[id + 1][1] == "цифра" or arr[id + 1][0] == "E":
-            word += arr[id][0]
+            resultWords.append((arr[id][0], arr[id][1]))
+            word = ""
             checkNum()
+    # elif tmp == "минус":
+    #     if arr[id + 1][1] == "цифра" or arr[id + 1][0] == "E":
+    #         word += arr[id][0]
+    #         checkNum()
         else:
             resultWords.append((arr[id][0], arr[id][1]))
+            main()
+    elif tmp == "плюс":
+        if arr[id + 1][1] == "цифра" or arr[id + 1][1] == "доллар":
+            resultWords.append((arr[id][0], arr[id][1]))
+            word = ""
             main()
     elif tmp == "доллар":
         resultWords.append((arr[id][0], arr[id][1]))
@@ -57,7 +67,7 @@ def checkChar():
         resultWords.append((word, "ИДЕНТИФИКАТОР"))
         word = ""
         main()
-    elif tmp == "тире":
+    elif tmp == "минус":
         if arr[id + 1][1] == "цифра" or arr[id + 1][0] == "E":
             word += arr[id][0]
             checkNum()
@@ -86,14 +96,21 @@ def checkNum():
     elif arr[id][0] == "." and arr[id + 1][1] == "цифра":
         word += arr[id][0]
         checkDecimal()
-    elif arr[id][0] == "E": #Если встречается символ "E", то функция вызывает checkExponent() для проверки числа в экспоненциальной записи.
+    elif arr[id][0] == "E":  # Если встречается символ "E", то функция вызывает checkExponent() для проверки числа в экспоненциальной записи.
         word += arr[id][0]
         checkExponent()
     elif tmp in specSymbols:
         resultWords.append((word, "ЦЕЛОЕ"))
         resultWords.append((arr[id][0], arr[id][1]))
         main()
-    elif tmp == "тире":
+    elif tmp == "пробел":
+        resultWords.append((word, "ЦЕЛОЕ"))
+        word = ""
+        main()
+    elif tmp == "буква":
+        word += arr[id][0]
+        checkNum()
+    elif tmp == "минус":
         resultWords.append((word, "ЦЕЛОЕ"))
         resultWords.append((arr[id][0], arr[id][1]))
         main()
@@ -117,9 +134,10 @@ def checkNum16():
         if word != "":
             resultWords.append((word, "ЦЕЛОЕ"))
             word = ""
-        resultWords.append((arr[id][0], arr[id][1]))
+        if tmp_1 != "пробел":
+            resultWords.append((arr[id][0], arr[id][1]))
         main()
-    elif tmp_1 == "тире":
+    elif tmp_1 == "минус":
         if word != "":
             resultWords.append((word, "ЦЕЛОЕ"))
             word = ""
@@ -175,12 +193,16 @@ def checkExponent():
     if tmp == "цифра":
         word += arr[id][0]
         checkExponent()
-    elif tmp == "тире" and arr[id + 1][1] == "цифра":
+    elif tmp == "минус" and arr[id + 1][1] == "цифра":
         word += arr[id][0]
         checkExponent()
     elif tmp in specSymbols:
         resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
         resultWords.append((arr[id][0], arr[id][1]))
+        main()
+    elif tmp == "пробел":
+        resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
+        word = ""
         main()
     elif tmp == "end":
         resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
