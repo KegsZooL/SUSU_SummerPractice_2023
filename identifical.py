@@ -17,17 +17,15 @@ def identification(words):
                 "until", "uses", "var", "while", "with", "with"]
 
     for i in words:
-        if i[0].lower() in banWords:
+        if i[0].lower() == "ИДЕНТИФИКАТОР":
+            if i in banWords:
+                arr.append("ОШИБКА")
+                print("\nНЕДОПУСТИМЫЙ СИМВОЛ")
 
-            arr.append("ОШИБКА")
-            print("\nНЕДОПУСТИМЫЙ СИМВОЛ")
-
-            data_output(0)
-            exit(0)
-
+                data_output(0)
+                exit(0)
         elif i[0].lower() == keyWords:
             arr.append("КЛСЛОВО_" + i[0].upper())
         else:
             arr.append(i[1])
-
     return arr
