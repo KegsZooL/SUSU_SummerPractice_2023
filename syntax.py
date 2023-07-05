@@ -5,7 +5,6 @@ def Syntax(string):
     znak = ["minus", "plus"]
 
     for i in range(len(string)):
-        print(status)
         if "КЛСЛОВО_" in string[i][1]:
             if status == "0":
                 status = "keyword"
