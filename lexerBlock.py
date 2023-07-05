@@ -19,13 +19,13 @@ def main():
 
     if tmp == "буква":
         word += arr[id][0]
-        checkChar()
+        Char()
     elif tmp == "цифра":
         word += arr[id][0]
-        checkNum()
+        Num()
     elif tmp == "одинкавыч":
         word += arr[id][0]
-        checkStr()
+        Str()
     elif tmp == "пробел":
         main()
     elif tmp in specSymbols:
@@ -35,11 +35,11 @@ def main():
         if arr[id + 1][1] == "цифра" or arr[id + 1][0] == "E":
             resultWords.append((arr[id][0], arr[id][1]))
             word = ""
-            checkNum()
+            Num()
     # elif tmp == "минус":
     #     if arr[id + 1][1] == "цифра" or arr[id + 1][0] == "E":
     #         word += arr[id][0]
-    #         checkNum()
+    #         Num()
         else:
             resultWords.append((arr[id][0], arr[id][1]))
             main()
@@ -50,20 +50,20 @@ def main():
             main()
     elif tmp == "доллар":
         resultWords.append((arr[id][0], arr[id][1]))
-        checkNum16()
+        Num16()
 
 # Функция для проверки буквенного символа.
-def checkChar():
+def Char():
     global word, resultWords, id
     id += 1
     tmp = arr[id][1]
 
     if tmp == "буква":
         word += arr[id][0]
-        checkChar()
+        Char()
     elif tmp == "цифра":
         word += arr[id][0]
-        checkChar()
+        Char()
     elif tmp == "пробел":
         resultWords.append((word, "ИДЕНТИФИКАТОР"))
         word = ""
@@ -71,7 +71,7 @@ def checkChar():
     elif tmp == "минус":
         if arr[id + 1][1] == "цифра" or arr[id + 1][0] == "E":
             word += arr[id][0]
-            checkNum()
+            Num()
         else:
             resultWords.append((word, "ИДЕНТИФИКАТОР"))
             word = ""
@@ -86,20 +86,20 @@ def checkChar():
         resultWords.append((word, "ИДЕНТИФИКАТОР"))
 
 # Функция для проверки цифры.
-def checkNum():
+def Num():
     global word, resultWords, id
     id += 1
     tmp = arr[id][1]
 
     if tmp == "цифра":
         word += arr[id][0]
-        checkNum()
+        Num()
     elif arr[id][0] == "." and arr[id + 1][1] == "цифра":
         word += arr[id][0]
-        checkDecimal()
-    elif arr[id][0] == "E":  # Если встречается символ "E", то функция вызывает checkExponent() для проверки числа в экспоненциальной записи.
+        Decimal()
+    elif arr[id][0] == "E":  # Если встречается символ "E", то функция вызывает Exponent() для проверки числа в экспоненциальной записи.
         word += arr[id][0]
-        checkExponent()
+        Exponent()
     elif tmp in specSymbols:
         resultWords.append((word, "ЦЕЛОЕ"))
         resultWords.append((arr[id][0], arr[id][1]))
@@ -110,7 +110,7 @@ def checkNum():
         main()
     elif tmp == "буква":
         word += arr[id][0]
-        checkNum()
+        Num()
     elif tmp == "минус":
         resultWords.append((word, "ЦЕЛОЕ"))
         resultWords.append((arr[id][0], arr[id][1]))
@@ -119,7 +119,7 @@ def checkNum():
         resultWords.append((word, "ЦЕЛОЕ"))
 
 # Функция для проверки 16-ричных констант
-def checkNum16():
+def Num16():
     global word, resultWords, id
     id += 1
     tmp = arr[id][0]
@@ -129,10 +129,10 @@ def checkNum16():
 
     if tmp in num16:
         word += arr[id][0]
-        checkNum16()
+        Num16()
     elif tmp_1 == "цифра":
         word += arr[id][0]
-        checkNum16()
+        Num16()
     elif tmp_1 in err: # Ошибка в лексике, если в цепочке после $ встречается недопустимый символ для 16-ричных чисел.
             resultWords.append((arr[id][0], "ОШИБКА"))
             if tmp_1 == "пробел":
@@ -150,14 +150,14 @@ def checkNum16():
 
 # Функция для проверки строки, которая находится внутри одинарных кавычек.
 # Функция продолжает анализ до тех пор, пока не встретит закрывающую одинарную кавычку.
-def checkStr():
+def Str():
     global word, resultWords, id
     id += 1
     tmp = arr[id][1]
 
     if tmp == "буква" or tmp == "цифра":
         word += arr[id][0]
-        checkStr()
+        Str()
     elif tmp == "одинкавыч":
         word += arr[id][0]
         resultWords.append((word, "СТРОКОВАЯ КОНСТАНТА"))
@@ -165,38 +165,38 @@ def checkStr():
         main()
     elif tmp == "end":
         resultWords.append((word, "СТРОКОВАЯ КОНСТАНТА"))
-        
+
 # Это функция нужна, если в строке находиться вещественное число.
-# Если тип является цифрой, функция продолжает анализ до тех пор, пока не встретит цифру или специальный символ. Если встречается символ "E", функция вызывает функцию checkExponent()
-def checkDecimal():
+# Если тип является цифрой, функция продолжает анализ до тех пор, пока не встретит цифру или специальный символ. Если встречается символ "E", функция вызывает функцию Exponent()
+def Decimal():
     global word, resultWords, id
     id += 1
     tmp = arr[id][1]
     if tmp == "цифра":
         word += arr[id][0]
-        checkDecimal()
+        Decimal()
     elif arr[id][0] == "E":
         word += arr[id][0]
-        checkExponent()
+        Exponent()
     elif tmp in specSymbols:
         resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
         resultWords.append((arr[id][0], arr[id][1]))
         main()
     elif tmp == "end":
         resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
-        
+
 # Эта функция нужна, если в строке находится экспоненциальная запись числа.
-def checkExponent():
+def Exponent():
     global word, resultWords, id
     id += 1
     tmp = arr[id][1]
 
     if tmp == "цифра":
         word += arr[id][0]
-        checkExponent()
+        Exponent()
     elif tmp == "минус" and arr[id + 1][1] == "цифра":
         word += arr[id][0]
-        checkExponent()
+        Exponent()
     elif tmp in specSymbols:
         resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
         resultWords.append((arr[id][0], arr[id][1]))
