@@ -3,7 +3,7 @@ def identification(words):
     arr = []
     keyWord = "const"
     boolConst = ["true", "false"]
-    pascaleWords = ["procedure", "program", "record", "reintroduce",
+    pascaleWords = ["procedure", "program", "record", "reintroduce", #Полный список зарезервированных слов в языке Pascal
                     "function", "goto", "if", "implementation",
                     "constructor", "destructor", "div", "do",
                     "in", "inherited", "inline", "interface",
