@@ -1,7 +1,7 @@
 def Syntax(string):
 
     status = "0"
-    classes = ["hexadecimal", "number", "decimalNum", "str", "bool"]
+    classes = ["number", "decimalNum", "str"]
     znak = ["minus", "plus"]
 
     for i in range(len(string)):
@@ -10,7 +10,7 @@ def Syntax(string):
                 status = "keyword"
             else:
                 return 0
-        elif string[i][1] == "ИДЕНТИФИКАТОР":
+        elif string[i][1] == "ИДЕНТ":
             if status == "keyword":
                 status = "identification"
             else:
@@ -41,19 +41,14 @@ def Syntax(string):
             else:
                 return 0
         #Не уверен, что не могу складывать строки для своего варианта /-_-|
-        elif string[i][1] == "СТРОКОВАЯ КОНСТАНТА":
+        elif string[i][1] == "СТРКОНСТ":
             if status == "equal":
                 status = "str"
             else:
                 return 0
-        elif string[i][1] == "ВЕЩЕСТВЕННАЯ КОНСТАНТА":
+        elif string[i][1] == "ВЕЩКОНСТ":
             if status == "equal" or status in znak:
                 status = "decimalNum"
-            else:
-                return 0
-        elif "ЛОГКОНСТ_"in string[i][1]:
-            if status == "equal":
-                status = "bool"
             else:
                 return 0
         elif string[i][1] == "тчкзпт":
