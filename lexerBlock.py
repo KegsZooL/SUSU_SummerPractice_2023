@@ -16,6 +16,7 @@ def main():
     global word, resultWords, id  # Заново объявляем некоторые переменные для их изменения.
     id += 1
     tmp = arr[id][1]
+
     if tmp == "буква":
         word += arr[id][0]
         checkChar()
@@ -124,23 +125,23 @@ def checkNum16():
     tmp = arr[id][0]
     tmp_1 = arr[id][1]
 
+    err = ["пробел", "минус", "плюс", "буква"]
+
     if tmp in num16:
         word += arr[id][0]
         checkNum16()
     elif tmp_1 == "цифра":
         word += arr[id][0]
         checkNum16()
-    elif tmp_1 in specSymbols or tmp_1 == "пробел":
-        if word != "":
-            resultWords.append((word, "ЦЕЛОЕ"))
-            word = ""
-        if tmp_1 != "пробел":
-            resultWords.append((arr[id][0], arr[id][1]))
-        main()
-    elif tmp_1 == "минус":
-        if word != "":
-            resultWords.append((word, "ЦЕЛОЕ"))
-            word = ""
+    elif tmp_1 in err: # Ошибка в лексике, если в цепочке после $ встречается недопустимый символ для 16-ричных чисел.
+            resultWords.append((arr[id][0], "ОШИБКА"))
+            if tmp_1 == "пробел":
+                print(f"\nОшибка в лексике: {arr[id - 1][0]}'{arr[id][0]}'")
+            else:
+                print(f"\nОшибка в лексике: {arr[id - 1][0]}{arr[id][0]}")
+            return resultWords
+    elif tmp_1 == "тчкзпт":
+        resultWords.append((word, "ЦЕЛОЕ"))
         resultWords.append((arr[id][0], arr[id][1]))
         main()
     elif tmp_1 == "end":
@@ -164,7 +165,7 @@ def checkStr():
         main()
     elif tmp == "end":
         resultWords.append((word, "СТРОКОВАЯ КОНСТАНТА"))
-
+        
 # Это функция нужна, если в строке находиться вещественное число.
 # Если тип является цифрой, функция продолжает анализ до тех пор, пока не встретит цифру или специальный символ. Если встречается символ "E", функция вызывает функцию checkExponent()
 def checkDecimal():
@@ -183,7 +184,7 @@ def checkDecimal():
         main()
     elif tmp == "end":
         resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
-
+        
 # Эта функция нужна, если в строке находится экспоненциальная запись числа.
 def checkExponent():
     global word, resultWords, id
