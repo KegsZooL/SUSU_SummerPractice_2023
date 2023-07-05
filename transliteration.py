@@ -35,7 +35,7 @@ def tansliteration(string):
          else:
              err = (string[i], "ошибка")
              arrSymbols.append(err)
-             print(f"Недопустимый символ {string[i]}")
+             print(f"Недопустимый символ: {string[i]}")
          i += 1
 
      return arrSymbols
