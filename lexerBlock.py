@@ -1,5 +1,5 @@
 # Главная функция, которая выполняет лексический анализ списка строк arrStr.
-# Dызывает функцию main() для анализа каждой лексемы в списке и возвращает список результатов resultWords.
+# Вызывает функцию main() для анализа каждой лексемы в списке и возвращает список результатов resultWords.
 def Lexer(arrStr):
     global word, numbers, num16, resultWords, specSymbols, id, arr
 
@@ -36,10 +36,6 @@ def main():
             resultWords.append((arr[id][0], arr[id][1]))
             word = ""
             Num()
-    # elif tmp == "минус":
-    #     if arr[id + 1][1] == "цифра" or arr[id + 1][0] == "E":
-    #         word += arr[id][0]
-    #         Num()
         else:
             resultWords.append((arr[id][0], arr[id][1]))
             main()
@@ -65,7 +61,7 @@ def Char():
         word += arr[id][0]
         Char()
     elif tmp == "пробел":
-        resultWords.append((word, "ИДЕНТИФИКАТОР"))
+        resultWords.append((word, "ИДЕНТ"))
         word = ""
         main()
     elif tmp == "минус":
@@ -73,17 +69,17 @@ def Char():
             word += arr[id][0]
             Num()
         else:
-            resultWords.append((word, "ИДЕНТИФИКАТОР"))
+            resultWords.append((word, "ИДЕНТ"))
             word = ""
             id -= 1
             main()
     elif tmp == "тчкзпт":
-        resultWords.append((word, "ИДЕНТИФИКАТОР"))
+        resultWords.append((word, "ИДЕНТ"))
         word = ""
         id -= 1
         main()
     elif tmp == "end":
-        resultWords.append((word, "ИДЕНТИФИКАТОР"))
+        resultWords.append((word, "ИДЕНТ"))
 
 # Функция для проверки цифры.
 def Num():
@@ -156,11 +152,11 @@ def Str():
         Str()
     elif tmp == "одинкавыч":
         word += arr[id][0]
-        resultWords.append((word, "СТРОКОВАЯ КОНСТАНТА"))
+        resultWords.append((word, "СТРКОНСТ"))
         word = ""
         main()
     elif tmp == "end":
-        resultWords.append((word, "СТРОКОВАЯ КОНСТАНТА"))
+        resultWords.append((word, "СТРКОНСТ"))
 
 # Это функция нужна, если в строке находиться вещественное число.
 # Если тип является цифрой, функция продолжает анализ до тех пор, пока не встретит цифру или специальный символ. Если встречается символ "E", функция вызывает функцию Exponent()
@@ -175,11 +171,11 @@ def Decimal():
         word += arr[id][0]
         Exponent()
     elif tmp in specSymbols:
-        resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
+        resultWords.append((word, "ВЕЩКОНСТ"))
         resultWords.append((arr[id][0], arr[id][1]))
         main()
     elif tmp == "end":
-        resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
+        resultWords.append((word, "ВЕЩКОНСТ"))
 
 # Эта функция нужна, если в строке находится экспоненциальная запись числа.
 def Exponent():
@@ -194,14 +190,14 @@ def Exponent():
         word += arr[id][0]
         Exponent()
     elif tmp in specSymbols:
-        resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
+        resultWords.append((word, "ВЕЩКОНСТ"))
         resultWords.append((arr[id][0], arr[id][1]))
         main()
     elif tmp == "пробел":
-        resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
+        resultWords.append((word, "ВЕЩКОНСТ"))
         word = ""
         main()
     elif tmp == "end":
-        resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
+        resultWords.append((word, "ВЕЩКОНСТ"))
 def Error():
     print("\nОшибка в лексике")
