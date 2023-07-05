@@ -2,60 +2,63 @@ def Syntax(string):
 
     status = "0"
     classes = ["hexadecimal", "number", "decimalNum", "str", "bool"]
+    znak = ["minus", "plus"]
 
     for i in range(len(string)):
         print(status)
-        if "КЛСЛОВО_" in string[i]:
+        if "КЛСЛОВО_" in string[i][1]:
             if status == "0":
                 status = "keyword"
             else:
                 return 0
-        elif string[i] == "ИДЕНТИФИКАТОР":
+        elif string[i][1] == "ИДЕНТИФИКАТОР":
             if status == "keyword":
                 status = "identification"
             else:
                 return 0
-        elif string[i] == "равно":
+        elif string[i][1] == "равно":
             if status == "identification":
                 status = "equal"
             else:
                 return 0
-        elif string[i] == "минус":
+        elif string[i][1] == "минус":
             if status == "equal" or (status == "decimalNum" or status == "number"):
                 status = "minus"
             else:
                 return 0
-        elif string[i] == "плюс":
+        elif string[i][1] == "плюс":
             if status == "decimalNum" or status == "number":
                 status = "plus"
             else:
                 return 0
-        elif string[i] == "ЦЕЛОЕ":
-            if status == "плюс" or status == "minus" or status == "equal" or status == "dollar":
+        elif string[i][1] == "ЦЕЛОЕ":
+            if status in znak or status == "equal" or status == "dollar":
                 status = "number"
             else:
                 return 0
-        elif string[i] == "доллар":
+        elif string[i][1] == "доллар":
             if status == "equal":
                 status = "dollar"
             else:
                 return 0
-        #Не уверен, что могу складывать строки для своего варианта /-_-|
-        elif string[i] == "СТРОКОВАЯ КОНСТАНТА":
+        #Не уверен, что не могу складывать строки для своего варианта /-_-|
+        elif string[i][1] == "СТРОКОВАЯ КОНСТАНТА":
             if status == "equal":
                 status = "str"
             else:
                 return 0
-
-        # elif string[i] == "ВЕЩЕСТВЕННАЯ КОНСТАНТА":
-        #     if status == ""
-        # elif string[i] == "ЛОГКОНСТ_TRUE":
-        #     if status == "equal":
-        #         status = "bool"
-        #     else:
-        #         return 0
-        elif string[i] == "тчкзпт":
-            if status in classes: #переделать
+        elif string[i][1] == "ВЕЩЕСТВЕННАЯ КОНСТАНТА":
+            if status == "equal" or status in znak:
+                status = "decimalNum"
+            else:
+                return 0
+        elif "ЛОГКОНСТ_"in string[i][1]:
+            if status == "equal":
+                status = "bool"
+            else:
+                return 0
+        elif string[i][1] == "тчкзпт":
+            if status in classes:
                 status = "end"
             else:
                 return 0
