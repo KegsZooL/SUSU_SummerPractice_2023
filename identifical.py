@@ -12,11 +12,11 @@ def identification(words):
                     "while", "with", "xor"]
 
     for i in words:
-        if i[0].lower() in pascaleWords:
+        if i[0].lower() == keyWord:
+            arr.append((i[0], "КЛСЛОВО_" + i[0].upper()))
+        elif i[0].lower() in pascaleWords:
             arr.append((i[0], "ПАСКАЛЬ_" + i[0].upper()))
             print(f"\nНедопустимое название переменной: {i[0].lower()}")
-        elif i[0].lower() == keyWord:
-            arr.append((i[0], "КЛСЛОВО_" + i[0].upper()))
         else:
             arr.append((i[0], i[1]))
     return arr
