@@ -135,11 +135,7 @@ def Num16():
         Num16()
     elif tmp_1 in err: # Ошибка в лексике, если в цепочке после $ встречается недопустимый символ для 16-ричных чисел.
             resultWords.append((arr[id][0], "ОШИБКА"))
-            if tmp_1 == "пробел":
-                print(f"\nОшибка в лексике: {arr[id - 1][0]}'{arr[id][0]}'")
-            else:
-                print(f"\nОшибка в лексике: {arr[id - 1][0]}{arr[id][0]}")
-            return resultWords
+            Error()
     elif tmp_1 == "тчкзпт":
         resultWords.append((word, "ЦЕЛОЕ"))
         resultWords.append((arr[id][0], arr[id][1]))
@@ -207,3 +203,5 @@ def Exponent():
         main()
     elif tmp == "end":
         resultWords.append((word, "ВЕЩЕСТВЕННАЯ КОНСТАНТА"))
+def Error():
+    print("\nОшибка в лексике")
