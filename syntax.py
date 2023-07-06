@@ -1,6 +1,6 @@
 def Syntax(string):
     status = "0"
-    classes = ["number", "decimalNum", "str", "hexNum", "znak"]
+    classes = ["number", "decimalNum", "str", "hexNum"]
 
     for i in range(len(string)):
         print(status)
@@ -29,22 +29,22 @@ def Syntax(string):
                 status = "number"
             else:
                 return 0
-        elif string[i][1] == "16-РИЧ":
+        elif string[i][1] == "16-РИЧ" and (string[i - 1][1] != "точка" and string[i + 1][1] != "точка"):
             if status == "dollar":
                 status = "hexNum"
             else:
                 return 0
-        elif string[i][1] == "доллар":
+        elif string[i][1] == "доллар" and (string[i - 1][1] != "точка" and string[i + 1][1] != "точка"):
             if status == "equal":
                 status = "dollar"
             else:
                 return 0
-        elif string[i][1] == "СТРКОНСТ":
+        elif string[i][1] == "СТРКОНСТ" and (string[i - 1][1] != "точка" and string[i + 1][1] != "точка"):
             if status == "equal":
                 status = "str"
             else:
                 return 0
-        elif string[i][1] == "ВЕЩКОНСТ":
+        elif string[i][1] == "ВЕЩКОНСТ" and (string[i - 1][1] != "точка" and string[i + 1][1] != "точка"):
             if status == "equal" or status == "znak":
                 status = "decimalNum"
             else:
