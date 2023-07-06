@@ -4,7 +4,7 @@ def Lexer(arrStr):
     global word, numbers, num16, resultWords, specSymbols, id, arr
 
     word, numbers, num16, resultWords, specSymbols, id, arr = "", list("123456789"), list("ABCDEF"), [], \
-        ("тчкзпт", "равно", "одинкавыч", "буква", "цифра", "точка", "плюс"), -1, arrStr
+        ("тчкзпт", "равно", "одинкавыч", "буква", "цифра", "точка"), -1, arrStr
 
     arr.append(("@", "end"))  # Добавление в конец двумерного массива ("@", "end") для корректного завершения рекурсии.
     main()
@@ -31,18 +31,17 @@ def main():
     elif tmp in specSymbols:
         resultWords.append((arr[id][0], arr[id][1]))
         main()
-    elif tmp == "минус":
-        if arr[id + 1][1] == "цифра" or arr[id + 1][0] == "E":
+    elif tmp == "знак":
+        if arr[id + 1][1] == "цифра" or arr[id + 1][1] == "доллар":
+            resultWords.append((arr[id][0], arr[id][1]))
+            word = ""
+            main()
+        elif arr[id + 1][1] == "цифра" or arr[id + 1][0] == "E":
             resultWords.append((arr[id][0], arr[id][1]))
             word = ""
             Num()
         else:
             resultWords.append((arr[id][0], arr[id][1]))
-            main()
-    elif tmp == "плюс":
-        if arr[id + 1][1] == "цифра" or arr[id + 1][1] == "доллар":
-            resultWords.append((arr[id][0], arr[id][1]))
-            word = ""
             main()
     elif tmp == "доллар":
         resultWords.append((arr[id][0], arr[id][1]))
@@ -64,7 +63,7 @@ def Char():
         resultWords.append((word, "ИДЕНТ"))
         word = ""
         main()
-    elif tmp == "минус":
+    elif arr[id][0] == "-":
         if arr[id + 1][1] == "цифра" or arr[id + 1][0] == "E":
             word += arr[id][0]
             Num()
@@ -107,7 +106,7 @@ def Num():
     elif tmp == "буква":
         word += arr[id][0]
         Num()
-    elif tmp == "минус":
+    elif arr[id][0] == "-":
         resultWords.append((word, "ЦЕЛОЕ"))
         resultWords.append((arr[id][0], arr[id][1]))
         main()
@@ -121,7 +120,7 @@ def Num16():
     tmp = arr[id][0]
     tmp_1 = arr[id][1]
 
-    err = ["пробел", "минус", "плюс", "буква"]
+    err = ["пробел", "знак", "буква"]
 
     if tmp in num16:
         word += arr[id][0]
@@ -133,12 +132,12 @@ def Num16():
             resultWords.append((arr[id][0], "ОШИБКА"))
             Error()
     elif tmp_1 == "тчкзпт":
-        resultWords.append((word, "ЦЕЛОЕ"))
+        resultWords.append((word, "16-РИЧ"))
         resultWords.append((arr[id][0], arr[id][1]))
         main()
     elif tmp_1 == "end":
         if word != "":
-            resultWords.append((word, "ЦЕЛОЕ"))
+            resultWords.append((word, "16-РИЧ"))
 
 # Функция для проверки строки, которая находится внутри одинарных кавычек.
 # Функция продолжает анализ до тех пор, пока не встретит закрывающую одинарную кавычку.
@@ -164,6 +163,7 @@ def Decimal():
     global word, resultWords, id
     id += 1
     tmp = arr[id][1]
+
     if tmp == "цифра":
         word += arr[id][0]
         Decimal()
@@ -186,7 +186,7 @@ def Exponent():
     if tmp == "цифра":
         word += arr[id][0]
         Exponent()
-    elif tmp == "минус" and arr[id + 1][1] == "цифра":
+    elif arr[id][0] == "-" and arr[id + 1][1] == "цифра":
         word += arr[id][0]
         Exponent()
     elif tmp in specSymbols:
