@@ -8,6 +8,6 @@ from syntax import*
 string = data_input()
 lexems = trl(string)
 words = Lexer(lexems)
-string = identification(words)
-result = Syntax(string)
+str = identification(words)
+result = Syntax(str)
 data_output(result)
