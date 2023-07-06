@@ -12,9 +12,9 @@ def classify_symbol(symbol): #Классификация спецсимволо�
     elif symbol == '.':
         return "точка"
     elif symbol == '-':
-        return "минус"
+        return "знак"
     elif symbol == "+":
-        return "плюс"
+        return "знак"
 def tansliteration(string):
      alphabet = list("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") #Список алфавита
      numbers = list("0123456789") #Список цифр
