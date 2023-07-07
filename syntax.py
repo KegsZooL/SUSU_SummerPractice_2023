@@ -3,6 +3,7 @@ def Syntax(string):
     classes = ["number", "decimalNum", "str", "hexNum"]
 
     for i in range(len(string)):
+        print(string[i][1])
         if "КЛСЛОВО_" in string[i][1]:
             if status == "start":
                 status = "keyword"
@@ -29,13 +30,8 @@ def Syntax(string):
             else:
                 return 0
         elif string[i][1] == "16-РИЧ":
-            if status == "dollar":
-                status = "hexNum"
-            else:
-                return 0
-        elif string[i][1] == "доллар":
             if status == "equal":
-                status = "dollar"
+                status = "hexNum"
             else:
                 return 0
         elif string[i][1] == "СТРКОНСТ":
