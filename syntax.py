@@ -44,8 +44,7 @@ def Syntax(string):
             else:
                 return 0
         elif string[i][1] == "ВЕЩКОНСТ":
-            x = len(string[i][0]) - 1
-            if (status == "equal" or status == "znak") and (string[i][0][x] != '-' and string[i][0][x] != '+'):
+            if status == "equal" or status == "znak":
                 status = "decimalNum"
             else:
                 return 0
