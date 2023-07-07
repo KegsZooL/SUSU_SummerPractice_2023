@@ -1,203 +1,131 @@
-# Главная функция, которая выполняет лексический анализ списка строк arrStr.
-# Вызывает функцию main() для анализа каждой лексемы в списке и возвращает список результатов resultWords.
+from file_manager import*
 def Lexer(arrStr):
-    global word, numbers, num16, resultWords, specSymbols, id, arr
+    result_words, current_state, current_word, num16, arr = [], "start", "", list("ABCDEF"), arrStr
+    arr.append(("@", "end"))
 
-    word, numbers, num16, resultWords, specSymbols, id, arr = "", list("123456789"), list("ABCDEF"), [], \
-        ("тчкзпт", "равно", "одинкавыч", "буква", "цифра", "точка"), -1, arrStr
-
-    arr.append(("@", "end"))  # Добавление в конец двумерного массива ("@", "end") для корректного завершения рекурсии.
-    main()
-
-    return resultWords
-
-# Основная функция, которая анализирует тип текущей лексемы и вызывает соответствующую функцию проверки для обработки лексемы.
-def main():
-    global word, resultWords, id  # Заново объявляем некоторые переменные для их изменения.
-    id += 1
-    tmp = arr[id][1]
-
-    if tmp == "буква":
-        word += arr[id][0]
-        Char()
-    elif tmp == "цифра":
-        word += arr[id][0]
-        Num()
-    elif tmp == "одинкавыч":
-        word += arr[id][0]
-        Str()
-    elif tmp == "пробел":
-        main()
-    elif tmp in specSymbols:
-        resultWords.append((arr[id][0], arr[id][1]))
-        main()
-    elif tmp == "знак":
-        if arr[id + 1][1] == "цифра" or arr[id + 1][1] == "доллар":
-            resultWords.append((arr[id][0], arr[id][1]))
-            word = ""
-            main()
-        elif arr[id + 1][1] == "цифра" or arr[id + 1][0] == "E":
-            resultWords.append((arr[id][0], arr[id][1]))
-            word = ""
-            Num()
-        else:
-            resultWords.append((arr[id][0], arr[id][1]))
-            main()
-    elif tmp == "доллар":
-        resultWords.append((arr[id][0], arr[id][1]))
-        Num16()
-
-# Функция для проверки буквенного символа.
-def Char():
-    global word, resultWords, id
-    id += 1
-    tmp = arr[id][1]
-
-    if tmp == "буква":
-        word += arr[id][0]
-        Char()
-    elif tmp == "цифра":
-        word += arr[id][0]
-        Char()
-    elif tmp == "пробел":
-        resultWords.append((word, "ИДЕНТ"))
-        word = ""
-        main()
-    elif arr[id][0] == "-":
-        if arr[id + 1][1] == "цифра" or arr[id + 1][0] == "E":
-            word += arr[id][0]
-            Num()
-        else:
-            resultWords.append((word, "ИДЕНТ"))
-            word = ""
-            id -= 1
-            main()
-    elif tmp == "тчкзпт":
-        resultWords.append((word, "ИДЕНТ"))
-        word = ""
-        id -= 1
-        main()
-    elif tmp == "end":
-        resultWords.append((word, "ИДЕНТ"))
-
-# Функция для проверки цифры.
-def Num():
-    global word, resultWords, id
-    id += 1
-    tmp = arr[id][1]
-
-    if tmp == "цифра":
-        word += arr[id][0]
-        Num()
-    elif arr[id][0] == "." and arr[id + 1][1] == "цифра":
-        word += arr[id][0]
-        Decimal()
-    elif arr[id][0] == "E":  # Если встречается символ "E", то функция вызывает Exponent() для проверки числа в экспоненциальной записи.
-        word += arr[id][0]
-        Exponent()
-    elif tmp in specSymbols:
-        resultWords.append((word, "ЦЕЛОЕ"))
-        resultWords.append((arr[id][0], arr[id][1]))
-        main()
-    elif tmp == "пробел":
-        resultWords.append((word, "ЦЕЛОЕ"))
-        word = ""
-        main()
-    elif tmp == "буква":
-        word += arr[id][0]
-        Num()
-    elif arr[id][0] == "-":
-        resultWords.append((word, "ЦЕЛОЕ"))
-        resultWords.append((arr[id][0], arr[id][1]))
-        main()
-    elif tmp == "end":
-        resultWords.append((word, "ЦЕЛОЕ"))
-
-# Функция для проверки 16-ричных констант
-def Num16():
-    global word, resultWords, id
-    id += 1
-    tmp = arr[id][0]
-    tmp_1 = arr[id][1]
-
-    err = ["пробел", "знак", "буква"]
-
-    if tmp in num16:
-        word += arr[id][0]
-        Num16()
-    elif tmp_1 == "цифра":
-        word += arr[id][0]
-        Num16()
-    elif tmp_1 in err: # Ошибка в лексике, если в цепочке после $ встречается недопустимый символ для 16-ричных чисел.
-            resultWords.append((arr[id][0], "ОШИБКА"))
-            Error()
-    elif tmp_1 == "тчкзпт":
-        resultWords.append((word, "16-РИЧ"))
-        resultWords.append((arr[id][0], arr[id][1]))
-        main()
-    elif tmp_1 == "end":
-        if word != "":
-            resultWords.append((word, "16-РИЧ"))
-
-# Функция для проверки строки, которая находится внутри одинарных кавычек.
-# Функция продолжает анализ до тех пор, пока не встретит закрывающую одинарную кавычку.
-def Str():
-    global word, resultWords, id
-    id += 1
-    tmp = arr[id][1]
-
-    if tmp == "буква" or tmp == "цифра":
-        word += arr[id][0]
-        Str()
-    elif tmp == "одинкавыч":
-        word += arr[id][0]
-        resultWords.append((word, "СТРКОНСТ"))
-        word = ""
-        main()
-    elif tmp == "end":
-        resultWords.append((word, "СТРКОНСТ"))
-
-# Это функция нужна, если в строке находиться вещественное число.
-# Если тип является цифрой, функция продолжает анализ до тех пор, пока не встретит цифру или специальный символ. Если встречается символ "E", функция вызывает функцию Exponent()
-def Decimal():
-    global word, resultWords, id
-    id += 1
-    tmp = arr[id][1]
-
-    if tmp == "цифра":
-        word += arr[id][0]
-        Decimal()
-    elif arr[id][0] == "E":
-        word += arr[id][0]
-        Exponent()
-    elif tmp in specSymbols:
-        resultWords.append((word, "ВЕЩКОНСТ"))
-        resultWords.append((arr[id][0], arr[id][1]))
-        main()
-    elif tmp == "end":
-        resultWords.append((word, "ВЕЩКОНСТ"))
-
-# Эта функция нужна, если в строке находится экспоненциальная запись числа.
-def Exponent():
-    global word, resultWords, id
-    id += 1
-    tmp = arr[id][1]
-
-    if tmp == "цифра":
-        word += arr[id][0]
-        Exponent()
-    elif arr[id][0] == "-" and arr[id + 1][1] == "цифра":
-        word += arr[id][0]
-        Exponent()
-    elif tmp in specSymbols:
-        resultWords.append((word, "ВЕЩКОНСТ"))
-        resultWords.append((arr[id][0], arr[id][1]))
-        main()
-    elif tmp == "пробел":
-        resultWords.append((word, "ВЕЩКОНСТ"))
-        word = ""
-        main()
-    elif tmp == "end":
-        resultWords.append((word, "ВЕЩКОНСТ"))
-def Error():
-    print("\nОшибка в лексике")
+    for lexems in arr:
+        if current_state == "start":
+            if lexems[0].isalpha():
+                current_state = "char"
+                current_word += lexems[0]
+            elif lexems[0].isdigit():
+                current_state = "number"
+                current_word += lexems[0]
+            elif lexems[0] == "=":
+                current_state = "equal"
+                result_words.append((lexems[0], "равно"))
+            elif lexems[0] == "$":
+                current_state = "dollar"
+                result_words.append((lexems[0], "доллар"))
+            elif lexems[0] == "-":
+                current_state = "znak"
+                current_word += lexems[0]
+            elif lexems[0] == "+":
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+            elif lexems[1] == "ошибка":
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+            elif lexems[0] == "\'":
+                current_state = "singleQuote1"
+                current_word += lexems[0]
+            elif lexems[0] == ";":
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "char":
+            if lexems[0].isalpha() or lexems[0].isdigit():
+                current_word += lexems[0]
+            else:
+                result_words.append((current_word, "ИДЕНТ"))
+                current_state = "start"
+                current_word = ""
+        elif current_state == "number":
+            if lexems[0].isdigit():
+                current_word += lexems[0]
+            elif lexems[0] == "E":
+                current_word += lexems[0]
+                current_state = "expNum"
+            elif lexems[0] == ";":
+                result_words.append((current_word, "ЦЕЛОЕ"))
+                result_words.append((lexems[0], "тчкзпт"))
+                return result_words
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "equal":
+                current_state = "start"
+                current_word = ""
+        elif current_state == "dollar":
+            if lexems[0].isdigit() or lexems[0] in num16:
+                current_state = "hexNum"
+                current_word += lexems[0]
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "hexNum":
+            if lexems[0].isdigit() or lexems[0] in num16:
+                current_word += lexems[0]
+            elif lexems[0] == ";":
+                result_words.append((current_word, "16-РИЧ"))
+                result_words.append((lexems[0], "тчкзпт"))
+                return result_words
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "singleQuote1":
+            if lexems[0].isdigit() or lexems[0].isalpha():
+                current_state = "str"
+                current_word += lexems[0]
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "str":
+            if lexems[0].isdigit() or lexems[0].isalpha():
+                current_word += lexems[0]
+            elif lexems[0] == "\'":
+                current_word += lexems[0]
+                current_state = "singleQuote2"
+                result_words.append((current_word, "СТРКОНСТ"))
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "singleQuote2":
+            if lexems[0] == ";":
+                result_words.append((lexems[0], "тчкзпт"))
+                return result_words
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "znak":
+            if lexems[0].isdigit():
+                current_word += lexems[0]
+                current_state = "number"
+        elif current_state == "expNum":
+            if lexems[0].isdigit():
+                current_word += lexems[0]
+                current_state = "expNum"
+            elif lexems[1] == "знак":
+               current_word += lexems[0]
+               current_state = "znak1"
+            elif lexems[0] == ";":
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "znak1":
+            if lexems[0].isdigit():
+                current_word += lexems[0]
+                current_state = "znak1"
+            else:
+                result_words.append((current_word, "ВЕЩКОНСТ"))
+                result_words.append((lexems[0], lexems[1]))
+                return result_words
+    return result_words
