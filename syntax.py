@@ -28,23 +28,24 @@ def Syntax(string):
                 status = "number"
             else:
                 return 0
-        elif string[i][1] == "16-РИЧ" and (string[i - 1][1] != "точка" and string[i + 1][1] != "точка"):
+        elif string[i][1] == "16-РИЧ":
             if status == "dollar":
                 status = "hexNum"
             else:
                 return 0
-        elif string[i][1] == "доллар" and (string[i - 1][1] != "точка" and string[i + 1][1] != "точка"):
+        elif string[i][1] == "доллар":
             if status == "equal":
                 status = "dollar"
             else:
                 return 0
-        elif string[i][1] == "СТРКОНСТ" and (string[i - 1][1] != "точка" and string[i + 1][1] != "точка"):
+        elif string[i][1] == "СТРКОНСТ":
             if status == "equal":
                 status = "str"
             else:
                 return 0
-        elif string[i][1] == "ВЕЩКОНСТ" and (string[i - 1][1] != "точка" and string[i + 1][1] != "точка"):
-            if status == "equal" or status == "znak":
+        elif string[i][1] == "ВЕЩКОНСТ":
+            x = len(string[i][0]) - 1
+            if (status == "equal" or status == "znak") and (string[i][0][x] != '-' and string[i][0][x] != '+'):
                 status = "decimalNum"
             else:
                 return 0
