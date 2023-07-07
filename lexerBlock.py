@@ -51,8 +51,7 @@ def Lexer(arrStr):
                 current_state = "expNum"
             elif lexems[0] == ";":
                 result_words.append((current_word, "ЦЕЛОЕ"))
-                result_words.append((lexems[0], "тчкзпт"))
-                return result_words
+                current_state = "end"
             else:
                 print("\nОшибка в лексике")
                 data_output(0)
@@ -73,8 +72,7 @@ def Lexer(arrStr):
                 current_word += lexems[0]
             elif lexems[0] == ";":
                 result_words.append((current_word, "16-РИЧ"))
-                result_words.append((lexems[0], "тчкзпт"))
-                return result_words
+                current_state = "end"
             else:
                 print("\nОшибка в лексике")
                 data_output(0)
@@ -100,8 +98,7 @@ def Lexer(arrStr):
                 exit(0)
         elif current_state == "quote2":
             if lexems[0] == ";":
-                result_words.append((lexems[0], "тчкзпт"))
-                return result_words
+                current_state = "end"
             else:
                 print("\nОшибка в лексике")
                 data_output(0)
@@ -126,8 +123,7 @@ def Lexer(arrStr):
                 current_state = "expNum2"
             elif lexems[0] == ";":
                 result_words.append((current_word, "ВЕЩКОНСТ"))
-                result_words.append((lexems[0], "тчкзпт"))
-                return result_words
+                current_state = "end"
             else:
                 print("\nОшибка в лексике")
                 data_output(0)
@@ -136,6 +132,13 @@ def Lexer(arrStr):
             if lexems[0].isdigit():
                 current_word += lexems[0]
                 current_state = "expNum"
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "end": #Обработка конца цепочки
+            if current_word != "":
+                result_words.append((';', "тчкзпт"))
             else:
                 print("\nОшибка в лексике")
                 data_output(0)
