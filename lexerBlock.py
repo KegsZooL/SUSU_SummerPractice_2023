@@ -13,7 +13,7 @@ def Lexer(arrStr):
                 current_state = "number"
                 current_word += lexems[0]
             elif lexems[0] == "=":
-                current_state = "equal"
+                current_state = "start"
                 result_words.append((lexems[0], "равно"))
             elif lexems[0] == "$":
                 current_state = "dollar"
@@ -56,9 +56,6 @@ def Lexer(arrStr):
                 print("\nОшибка в лексике")
                 data_output(0)
                 exit(0)
-        elif current_state == "equal":
-            current_state = "start"
-            current_word = ""
         elif current_state == "dollar": #Если в цепочке встречается символ "$",то статус меняется для проверки 16-ричной константы.
             if lexems[0].isdigit() or lexems[0] in num16:
                 current_state = "hexNum"
