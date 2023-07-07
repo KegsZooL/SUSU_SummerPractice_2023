@@ -30,7 +30,7 @@ def Lexer(arrStr):
                 data_output(0)
                 exit(0)
             elif lexems[0] == "\'":
-                current_state = "singleQuote1"
+                current_state = "quote1"
                 current_word += lexems[0]
             elif lexems[0] == ";":
                 print("\nОшибка в лексике")
@@ -79,7 +79,7 @@ def Lexer(arrStr):
                 print("\nОшибка в лексике")
                 data_output(0)
                 exit(0)
-        elif current_state == "singleQuote1": #Открывающая кавычка строковой константы
+        elif current_state == "quote1": #Открывающая кавычка строковой константы
             if lexems[0].isdigit() or lexems[0].isalpha():
                 current_state = "str"
                 current_word += lexems[0]
@@ -92,13 +92,13 @@ def Lexer(arrStr):
                 current_word += lexems[0]
             elif lexems[0] == "\'":
                 current_word += lexems[0]
-                current_state = "singleQuote2"
+                current_state = "quote2"
                 result_words.append((current_word, "СТРКОНСТ"))
             else:
                 print("\nОшибка в лексике") #Если после открывающей кавыч. не встречается закр. кавычка,то это ошибка.
                 data_output(0)
                 exit(0)
-        elif current_state == "singleQuote2":
+        elif current_state == "quote2":
             if lexems[0] == ";":
                 result_words.append((lexems[0], "тчкзпт"))
                 return result_words
