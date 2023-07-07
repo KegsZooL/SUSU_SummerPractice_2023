@@ -9,16 +9,14 @@ def classify_symbol(symbol): #Классификация спецсимволо�
         return "одинкавыч"
     elif symbol == ' ':
         return "пробел"
-    elif symbol == '.':
-        return "точка"
-    elif symbol == '-':
+    elif symbol == '+':
         return "знак"
-    elif symbol == "+":
+    elif symbol == '-':
         return "знак"
 def tansliteration(string):
      alphabet = list("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") #Список алфавита
      numbers = list("0123456789") #Список цифр
-     sym = ['$', ';', '=', '\'', ' ', '-', '+', '.'] #Список спецсимволов
+     sym = ['$', ';', '=', '\'', ' ', '-', '+'] #Список спецсимволов
 
      arrSymbols = [] #Список для хранения символов с их классами
      i = 0
