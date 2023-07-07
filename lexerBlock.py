@@ -17,7 +17,7 @@ def Lexer(arrStr):
                 result_words.append((lexems[0], "равно"))
             elif lexems[0] == "$":
                 current_state = "dollar"
-                result_words.append((lexems[0], "доллар"))
+                current_word += lexems[0]
             elif lexems[0] == "-":
                 current_state = "znak"
                 current_word += lexems[0]
