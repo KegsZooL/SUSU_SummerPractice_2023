@@ -1,10 +1,11 @@
-from file_manager import*
+from file_manager import* # Импортирование модуля работы с файлом для отвергания заведомо неправильной цепочки.
+# Функция, которая выполняет лексический анализ каждой лексемы в списке arrStr и возвращает список результатов result_words.
 def Lexer(arrStr):
     result_words, current_state, current_word, num16, arr = [], "start", "", list("ABCDEF"), arrStr
-    arr.append(("@", "end"))
+    arr.append(("@", "end")) # Добавление в конец двумерного массива ("@", "end") для корректного завершения цикла.
 
     for lexems in arr:
-        if current_state == "start":
+        if current_state == "start": #Начальное состояние
             if lexems[0].isalpha():
                 current_state = "char"
                 current_word += lexems[0]
@@ -35,17 +36,17 @@ def Lexer(arrStr):
                 print("\nОшибка в лексике")
                 data_output(0)
                 exit(0)
-        elif current_state == "char":
+        elif current_state == "char": #Обработка идентификаторов
             if lexems[0].isalpha() or lexems[0].isdigit():
                 current_word += lexems[0]
             else:
                 result_words.append((current_word, "ИДЕНТ"))
                 current_state = "start"
                 current_word = ""
-        elif current_state == "number":
+        elif current_state == "number": #Обработка чисел
             if lexems[0].isdigit():
                 current_word += lexems[0]
-            elif lexems[0] == "E":
+            elif lexems[0] == "E": #Если в цепочке встречается символ "E",то статус меняется для проверки числа в экспоненциальной записи.
                 current_word += lexems[0]
                 current_state = "expNum"
             elif lexems[0] == ";":
@@ -57,9 +58,9 @@ def Lexer(arrStr):
                 data_output(0)
                 exit(0)
         elif current_state == "equal":
-                current_state = "start"
-                current_word = ""
-        elif current_state == "dollar":
+            current_state = "start"
+            current_word = ""
+        elif current_state == "dollar": #Если в цепочке встречается символ "$",то статус меняется для проверки 16-ричной константы.
             if lexems[0].isdigit() or lexems[0] in num16:
                 current_state = "hexNum"
                 current_word += lexems[0]
@@ -67,7 +68,7 @@ def Lexer(arrStr):
                 print("\nОшибка в лексике")
                 data_output(0)
                 exit(0)
-        elif current_state == "hexNum":
+        elif current_state == "hexNum":#Обработка 16-ричных констант.
             if lexems[0].isdigit() or lexems[0] in num16:
                 current_word += lexems[0]
             elif lexems[0] == ";":
@@ -78,7 +79,7 @@ def Lexer(arrStr):
                 print("\nОшибка в лексике")
                 data_output(0)
                 exit(0)
-        elif current_state == "singleQuote1":
+        elif current_state == "singleQuote1": #Открывающая кавычка строковой константы
             if lexems[0].isdigit() or lexems[0].isalpha():
                 current_state = "str"
                 current_word += lexems[0]
@@ -94,7 +95,7 @@ def Lexer(arrStr):
                 current_state = "singleQuote2"
                 result_words.append((current_word, "СТРКОНСТ"))
             else:
-                print("\nОшибка в лексике")
+                print("\nОшибка в лексике") #Если после открывающей кавыч. не встречается закр. кавычка,то это ошибка.
                 data_output(0)
                 exit(0)
         elif current_state == "singleQuote2":
@@ -109,23 +110,35 @@ def Lexer(arrStr):
             if lexems[0].isdigit():
                 current_word += lexems[0]
                 current_state = "number"
+            elif lexems[0] == "E": #Если после "-" идёт "E", то статус меняется на "expNum" для обработки экспоненциальной запись числа.
+                current_word += lexems[0]
+                current_state = "expNum"
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
         elif current_state == "expNum":
             if lexems[0].isdigit():
                 current_word += lexems[0]
                 current_state = "expNum"
-            elif lexems[1] == "знак":
-               current_word += lexems[0]
-               current_state = "znak1"
+            elif lexems[0] == "-":
+                current_word += lexems[0]
+                current_state = "expNum2"
             elif lexems[0] == ";":
+                result_words.append((current_word, "ВЕЩКОНСТ"))
+                result_words.append((lexems[0], "тчкзпт"))
+                return result_words
+            else:
                 print("\nОшибка в лексике")
                 data_output(0)
                 exit(0)
-        elif current_state == "znak1":
+        elif current_state == "expNum2": #Если после "-" не идет число, то это ошибка в лексике (Например: 1E-)
             if lexems[0].isdigit():
                 current_word += lexems[0]
-                current_state = "znak1"
+                current_state = "expNum"
             else:
-                result_words.append((current_word, "ВЕЩКОНСТ"))
-                result_words.append((lexems[0], lexems[1]))
-                return result_words
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+
     return result_words
