@@ -1,8 +1,8 @@
 from file_manager import* # Импортирование модуля работы с файлом для отвергания заведомо неправильной цепочки.
 # Функция, которая выполняет лексический анализ каждой лексемы в списке arrStr и возвращает список результатов result_words.
 def Lexer(arrStr):
-    result_words, current_state, current_word, num16, arr = [], "start", "", list("ABCDEF"), arrStr
-    arr.append(("@", "end")) # Добавление в конец двумерного массива ("@", "end") для корректного завершения цикла.
+    result_words, current_state, current_word, num16, arr = [], "start", "", list("ABCDEF"), arrStr #num16 - буквы, которые могут встречаться в 16-ричных числах
+    arr.append(("@", "end")) # Добавление в конец двумерного массива ("@", "end") для корректного прохода по всем лексемам.
 
     for lexems in arr:
         if current_state == "start": #Начальное состояние
