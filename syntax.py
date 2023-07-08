@@ -19,7 +19,7 @@ def Syntax(string):
                 status = "equal"
             else:
                 return 0
-        elif string[i][1] == "знак":
+        elif string[i][1] == "знак": #После равно может идти отрицательный знак перед вещественным числом или перед обычным числом
             if status == "equal" or (status == "decimalNum" or status == "number"):
                 status = "znak"
             else:
