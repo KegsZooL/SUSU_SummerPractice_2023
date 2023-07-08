@@ -2,7 +2,7 @@ def identification(words):
 
     arr = []
     keyWord = "const"
-    pascaleWords = ["and", "array", "asm", "begin", "case", "const", "constructor",
+    pascaleWords = ["and", "array", "asm", "begin", "case", "const", "constructor", #Зарезервированные слова pascal
                     "destructor", "div", "do", "downto", "else", "end", "fasle", "file",
                     "for", "function", "goto", "if", "implementation", "in",
                     "inherited", "inline", "interface", "label", "mod", "nil",
