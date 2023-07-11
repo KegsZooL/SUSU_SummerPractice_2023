@@ -7,42 +7,42 @@ def Lexer(arrStr):
     for lexems in arr:
         if current_state == "start": #Начальное состояние
             if lexems[0].isalpha():
-                current_state = "char"
-                current_word += lexems[0]
-            elif lexems[0].isdigit():
-                current_state = "number"
-                current_word += lexems[0]
-            elif lexems[0] == "=":
-                current_state = "start"
-                result_words.append((lexems[0], "равно"))
-            elif lexems[0] == "$":
-                current_state = "dollar"
-                current_word += lexems[0]
-            elif lexems[0] == "-":
-                current_state = "znak"
-                current_word += lexems[0]
-            elif lexems[0] == "+":
-                print("\nОшибка в лексике")
-                data_output(0)
-                exit(0)
-            elif lexems[1] == "ошибка":
-                print("\nОшибка в лексике")
-                data_output(0)
-                exit(0)
-            elif lexems[0] == "\'":
-                current_state = "quote1"
-                current_word += lexems[0]
-            elif lexems[0] == ";":
-                print("\nОшибка в лексике")
-                data_output(0)
-                exit(0)
-        elif current_state == "char": #Обработка идентификаторов
-            if lexems[0].isalpha() or lexems[0].isdigit():
+                current_state = "firstWord"
                 current_word += lexems[0]
             else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "firstWord": #Обработка первого слова
+            if lexems[0].isalpha():
+                current_word += lexems[0]
+            elif lexems[1] == "пробел":
                 result_words.append((current_word, "ИДЕНТ"))
-                current_state = "start"
                 current_word = ""
+                current_state = "space1"
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "space1": #Обработка пробела после ключ. слова
+            if lexems[0].isdigit() or lexems[0].isalpha():
+                current_word += lexems[0]
+                current_state = "ident"
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "ident": #Обработка идентификатора
+            if lexems[0].isalpha() or lexems[0].isdigit():
+                current_word += lexems[0]
+            elif lexems[1] == "пробел":
+                result_words.append((current_word, "ИДЕНТ"))
+                current_state = "space2"
+                current_word = ""
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
         elif current_state == "number": #Обработка чисел
             if lexems[0].isdigit():
                 current_word += lexems[0]
@@ -56,9 +56,34 @@ def Lexer(arrStr):
                 print("\nОшибка в лексике")
                 data_output(0)
                 exit(0)
+        elif current_state == "space2": #Обработка второго пробела после идентификатора
+            if lexems[0] == "=":
+                result_words.append((lexems[0], lexems[1]))
+                current_state = "equal"
         elif current_state == "equal":
-            current_state = "start"
-            current_word = ""
+            if lexems[1] == "пробел":
+                current_state = "space3"
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
+        elif current_state == "space3": #Обработка третьего пробела после равно
+            if lexems[0] == "$":
+                current_word += lexems[0]
+                current_state = "dollar"
+            elif lexems[0] == "\'":
+                current_state = "quote1"
+                current_word += lexems[0]
+            elif lexems[0].isdigit():
+                current_word += lexems[0]
+                current_state = "number"
+            elif lexems[0] == "-":
+                current_state = "number"
+                current_word += lexems[0]
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
         elif current_state == "dollar": #Если в цепочке встречается символ "$",то статус меняется для проверки 16-ричной константы.
             if lexems[0].isdigit() or lexems[0] in num16:
                 current_state = "hexNum"
