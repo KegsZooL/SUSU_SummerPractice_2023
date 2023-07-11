@@ -5,6 +5,7 @@ def Lexer(arrStr):
     arr.append(("@", "end")) # Добавление в конец двумерного массива ("@", "end") для корректного прохода по всем лексемам.
 
     for lexems in arr:
+        print(current_state, lexems[0])
         if current_state == "start": #Начальное состояние
             if lexems[0].isalpha():
                 current_state = "firstWord"
@@ -60,6 +61,10 @@ def Lexer(arrStr):
             if lexems[0] == "=":
                 result_words.append((lexems[0], lexems[1]))
                 current_state = "equal"
+            else:
+                print("\nОшибка в лексике")
+                data_output(0)
+                exit(0)
         elif current_state == "equal":
             if lexems[1] == "пробел":
                 current_state = "space3"
@@ -77,8 +82,8 @@ def Lexer(arrStr):
             elif lexems[0].isdigit():
                 current_word += lexems[0]
                 current_state = "number"
-            elif lexems[0] == "-":
-                current_state = "number"
+            elif lexems[1] == "знак":
+                current_state = "znak"
                 current_word += lexems[0]
             else:
                 print("\nОшибка в лексике")
@@ -132,7 +137,7 @@ def Lexer(arrStr):
             if lexems[0].isdigit():
                 current_word += lexems[0]
                 current_state = "number"
-            elif lexems[0] == "E": #Если после "-" идёт "E", то статус меняется на "expNum" для обработки экспоненциальной запись числа.
+            elif lexems[0] == "E": #Если после "-" или "+" идёт "E", то статус меняется на "expNum" для обработки экспоненциальной запись числа.
                 current_word += lexems[0]
                 current_state = "expNum"
             else:
@@ -143,7 +148,7 @@ def Lexer(arrStr):
             if lexems[0].isdigit():
                 current_word += lexems[0]
                 current_state = "expNum"
-            elif lexems[0] == "-":
+            elif lexems[1] == "знак":
                 current_word += lexems[0]
                 current_state = "expNum2"
             elif lexems[0] == ";":
