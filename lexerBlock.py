@@ -21,7 +21,7 @@ def Lexer(arrStr):
             else:
                 current_state = "E"
         elif current_state == "space1": #Обработка пробела после ключ. слова
-            if lexems[0].isdigit() or lexems[0].isalpha():
+            if lexems[0].isalpha(): #Идентификатор не может начинаться с цифры
                 current_word += lexems[0]
                 current_state = "ident"
             else:
