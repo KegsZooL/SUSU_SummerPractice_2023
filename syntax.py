@@ -34,7 +34,7 @@ def Syntax(string):
             else:
                 return 0
         elif string[i][1] == "ВЕЩКОНСТ":
-            if status == "equal" or status == "znak":
+            if status == "equal":
                 status = "decimalNum"
             else:
                 return 0
